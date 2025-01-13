@@ -104,7 +104,6 @@ public class XtHttpUtil {
             y += "#" + jsonBody;
         }
         String origin = x + y;
-        System.out.println("origion===" + origin);
         return HmacUtils.hmacSha256Hex(secretKey, origin);
     }
 

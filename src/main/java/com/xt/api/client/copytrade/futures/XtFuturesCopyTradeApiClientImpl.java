@@ -21,11 +21,11 @@ public class XtFuturesCopyTradeApiClientImpl implements XtFuturesCopyTradeApiCli
 
     private final XtFuturesCopyTradeApiService service;
 
-    public XtFuturesCopyTradeApiClientImpl(HttpProxyProperties proxyProperties){
+    public XtFuturesCopyTradeApiClientImpl(HttpProxyProperties proxyProperties, String appKey, String secretKey){
         Retrofit retrofit =
                 new Retrofit.Builder()
                         .baseUrl(API_URL)
-                        .client(XtOkHttpClientBuilder.build(proxyProperties,new XtFutureOkHttpInterceptor()))
+                        .client(XtOkHttpClientBuilder.build(proxyProperties,new XtFutureOkHttpInterceptor(appKey, secretKey)))
                         .addConverterFactory(JacksonConverterFactory.create())
                         .build();
         service = retrofit.create(XtFuturesCopyTradeApiService.class);

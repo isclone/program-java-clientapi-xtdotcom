@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
  * @create 2023/9/21 10:43
  */
 public abstract class XtAbstractOkHttpInterceptor implements Interceptor {
-    protected static final String appKey = "xxx";
-    protected static final String secretKey = "xxx";
+    private String appKey;
+    private String secretKey;
 
 
     protected static final String encry = "HmacSHA256";
@@ -33,6 +33,11 @@ public abstract class XtAbstractOkHttpInterceptor implements Interceptor {
     protected static final String HEADER_TIME = "validate-timestamp";
     protected static final String HEADER_SIGN = "validate-signature";
 
+    public XtAbstractOkHttpInterceptor(String appKey, String secretKey) {
+    	this.appKey = appKey;
+    	this.secretKey = secretKey;
+    }
+    
     @NotNull
     @Override
     public Response intercept(@NotNull Chain chain) throws IOException {
@@ -86,7 +91,7 @@ public abstract class XtAbstractOkHttpInterceptor implements Interceptor {
         requestBuilder
                 .header("Content-Type", contentType)
                 .header(HEADER_ALG, encry)
-                .header(HEADER_APPKEY, appKey)
+                .header(HEADER_APPKEY, getAppKey())
                 .header(HEADER_WIND, window)
                 .header(HEADER_TIME, time)
                 .header(HEADER_SIGN, sign);
@@ -94,4 +99,12 @@ public abstract class XtAbstractOkHttpInterceptor implements Interceptor {
 
 
     protected abstract String generateSign(String timestamp, String window, String method, String uri, String query, String jsonBody);
+
+	protected String getSecretKey() {
+		return secretKey;
+	}
+
+	protected String getAppKey() {
+		return appKey;
+	}
 }

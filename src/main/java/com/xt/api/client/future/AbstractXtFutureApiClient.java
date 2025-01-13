@@ -1,26 +1,34 @@
 package com.xt.api.client.future;
 
+import java.util.List;
+import java.util.Map;
+
 import com.google.gson.Gson;
+import com.xt.api.dto.FutureCommonListResponse;
 import com.xt.api.dto.FutureCommonResponse;
+import com.xt.api.dto.future.ContractResponse;
 import com.xt.api.dto.future.FutureOrderCancelAllRequest;
 import com.xt.api.dto.future.FutureOrderCancelRequest;
 import com.xt.api.dto.future.FuturePostOrderRequest;
+import com.xt.api.dto.future.FutureTriggerPostOrderRequest;
+
 import retrofit2.Call;
 import retrofit2.Response;
-
-import java.util.List;
-import java.util.Map;
+import retrofit2.http.Body;
+import retrofit2.http.Query;
 
 /**
  * @author zhouzhuang
  * @create 2023/9/20 18:23
  */
 public abstract class AbstractXtFutureApiClient implements XtFutureApiClient{
+	
     private final Gson gson = new Gson();
     @Override
     public FutureCommonResponse postOrder(FuturePostOrderRequest request) {
         return executeSync(getService().postOrder(request));
     }
+        
     @Override
     public FutureCommonResponse batchOrder(List<FuturePostOrderRequest> futurePostOrderRequestList){
         return executeSync(getService().batchOrder(gson.toJson(futurePostOrderRequestList)));
@@ -56,23 +64,28 @@ public abstract class AbstractXtFutureApiClient implements XtFutureApiClient{
     }
 
     @Override
-    public FutureCommonResponse entrustCreatePlan(Map<String, String> params){
-        return executeSync(getService().entrustCreatePlan(params));
+    public FutureCommonResponse postTriggerOrder(FutureTriggerPostOrderRequest futurePostOrderRequest) {
+    	return executeSync(getService().postTriggerOrder(futurePostOrderRequest));
     }
 
     @Override
-    public FutureCommonResponse entrustCancelPlan(Long entrustId){
-        return executeSync(getService().entrustCancelPlan(entrustId));
+    public FutureCommonResponse cancelTriggerOrder(Long entrustId){
+        return executeSync(getService().cancelTriggerOrder(entrustId));
     }
 
     @Override
-    public FutureCommonResponse entrustCancelAllPlan(String symbol){
-        return executeSync(getService().entrustCancelAllPlan(symbol));
+    public FutureCommonResponse cancelAllTriggerOrders(String symbol){
+        return executeSync(getService().cancelAllTriggerOrders(symbol));
     }
 
     @Override
     public FutureCommonResponse accountInfo(){
         return executeSync(getService().accountInfo());
+    }
+
+    @Override
+    public FutureCommonResponse balanceList(){
+        return executeSync(getService().balanceList());
     }
 
     @Override
@@ -90,6 +103,50 @@ public abstract class AbstractXtFutureApiClient implements XtFutureApiClient{
         return executeSync(getService().adjustLeverage(symbol,positionSide,leverage));
     }
 
+    @Override
+    public FutureCommonResponse changePositionType(String symbol, String positionSide, String positionType) {
+        return executeSync(getService().changePositionType(symbol, positionSide, positionType));
+    }
+
+    @Override
+    public FutureCommonResponse symbols() {
+    	return executeSync(getService().symbols());
+    }
+    
+    @Override
+    public FutureCommonResponse symbolMarkPrice(String symbol) {
+    	return executeSync(getService().symbolMarkPrice(symbol));
+    }
+    
+    @Override
+    public FutureCommonResponse positionList(String symbol) {
+    	return executeSync(getService().positionList(symbol));
+    }
+    
+    @Override
+    public List<ContractResponse> contracts() {
+        try {
+	    	Call<List<ContractResponse>> call = getService().contracts();
+
+	    	Response<List<ContractResponse>> response = call.execute();
+        
+	        if (response.isSuccessful()) {
+	            return response.body();
+	        }else {
+	            throw new RuntimeException(String.format("failed to call interface:%s,%s",response.code(),response.toString()));
+	        }
+	    }catch (Exception e){
+	        System.err.println("call interface exception:"+e);
+	        throw new RuntimeException(e);
+	    }
+    }
+    
+    @Override
+    public FutureCommonResponse kline(String symbol, String interval, Long startTime, Long endTime, Long limit) {
+    	return executeSync(getService().kline(symbol, interval, startTime, endTime, limit));
+    }
+        
+
     public FutureCommonResponse executeSync(Call<FutureCommonResponse> call) {
         try {
             Response<FutureCommonResponse> response = call.execute();
@@ -106,6 +163,6 @@ public abstract class AbstractXtFutureApiClient implements XtFutureApiClient{
             throw new RuntimeException(e);
         }
     }
-
+    
     abstract XtFutureApiService getService();
 }

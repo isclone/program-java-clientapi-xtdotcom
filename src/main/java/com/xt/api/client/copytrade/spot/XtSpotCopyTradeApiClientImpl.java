@@ -26,11 +26,11 @@ public class XtSpotCopyTradeApiClientImpl implements XtSpotCopyTradeApiClient {
 
     private final XtSpotCopyTradeApiService service;
 
-    public XtSpotCopyTradeApiClientImpl(HttpProxyProperties proxyProperties){
+    public XtSpotCopyTradeApiClientImpl(HttpProxyProperties proxyProperties, String appKey, String secretKey){
         Retrofit retrofit =
                 new Retrofit.Builder()
                         .baseUrl(API_URL)
-                        .client(XtOkHttpClientBuilder.build(proxyProperties,new XtSpotOkHttpInterceptor()))
+                        .client(XtOkHttpClientBuilder.build(proxyProperties,new XtSpotOkHttpInterceptor(appKey, secretKey)))
                         .addConverterFactory(JacksonConverterFactory.create())
                         .build();
         service = retrofit.create(XtSpotCopyTradeApiService.class);

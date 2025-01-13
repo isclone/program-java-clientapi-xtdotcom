@@ -1,13 +1,22 @@
 package com.xt.api.client.future;
 
+import java.util.List;
+import java.util.Map;
+
 import com.xt.api.dto.FutureCommonResponse;
+import com.xt.api.dto.future.ContractResponse;
 import com.xt.api.dto.future.FutureOrderCancelAllRequest;
 import com.xt.api.dto.future.FutureOrderCancelRequest;
 import com.xt.api.dto.future.FuturePostOrderRequest;
-import retrofit2.Call;
-import retrofit2.http.*;
+import com.xt.api.dto.future.FutureTriggerPostOrderRequest;
 
-import java.util.Map;
+import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.POST;
+import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 
 /**
  * @author zhouzhuang
@@ -24,7 +33,7 @@ public interface XtFutureApiService {
     @POST("/future/trade/v1/order/create-batch")
     @Headers("Content-Type: application/x-www-form-urlencoded")
     Call<FutureCommonResponse> batchOrder(@Query("list") String list);
-
+    
     @GET("/future/trade/v1/order/list-history")
     Call<FutureCommonResponse> orderListHistory(@QueryMap Map<String, String> params);
 
@@ -45,18 +54,21 @@ public interface XtFutureApiService {
 
     @POST("/future/trade/v1/entrust/create-plan")
     @Headers("Content-Type: application/x-www-form-urlencoded")
-    Call<FutureCommonResponse> entrustCreatePlan(@QueryMap Map<String, String> params);
+    Call<FutureCommonResponse> postTriggerOrder(@Body FutureTriggerPostOrderRequest futurePostOrderRequest);
 
     @POST("/future/trade/v1/entrust/cancel-plan")
     @Headers("Content-Type: application/x-www-form-urlencoded")
-    Call<FutureCommonResponse> entrustCancelPlan(@Query("entrustId") Long entrustId);
+    Call<FutureCommonResponse> cancelTriggerOrder(@Query("entrustId") Long entrustId);
 
     @POST("/future/trade/v1/entrust/cancel-all-plan")
     @Headers("Content-Type: application/x-www-form-urlencoded")
-    Call<FutureCommonResponse> entrustCancelAllPlan(@Query("symbol") String symbol);
+    Call<FutureCommonResponse> cancelAllTriggerOrders(@Query("symbol") String symbol);
 
     @GET("/future/user/v1/account/info")
     Call<FutureCommonResponse> accountInfo();
+
+    @GET("/future/user/v1/balance/list")
+    Call<FutureCommonResponse> balanceList();
 
     @GET("/future/user/v1/balance/detail")
     Call<FutureCommonResponse> balanceDetail(@Query("coin") String coin);
@@ -64,9 +76,27 @@ public interface XtFutureApiService {
     @GET("/future/user/v1/user/listen-key")
     Call<FutureCommonResponse> listenKey();
 
+    @GET("/future/market/v3/public/symbol/list")
+    Call<FutureCommonResponse> symbols();
+    
+    @GET("/future/market/v1/public/q/symbol-mark-price")
+    Call<FutureCommonResponse> symbolMarkPrice(@Query("symbol") String symbol);
+    
+    @GET("/future/user/v1/position/list")
+    Call<FutureCommonResponse> positionList(@Query("symbol") String symbol);
+
+    @GET("/future/market/v1/public/cg/contracts")
+    Call<List<ContractResponse>> contracts();
+
+    @GET("/future/market/v1/public/q/kline")
+    Call<FutureCommonResponse> kline(@Query("symbol") String symbol, @Query("interval") String interval, @Query("startTime") Long startTime, @Query("endTime") Long endTime, @Query("limit") Long limit);
 
     @POST("/future/user/v1/position/adjust-leverage")
     @Headers("Content-Type: application/x-www-form-urlencoded")
     Call<FutureCommonResponse> adjustLeverage(@Query("symbol") String symbol,@Query("positionSide") String positionSide,@Query("leverage") Integer leverage);
 
+    @POST("/future/user/v1/position/change-type")
+    @Headers("Content-Type: application/x-www-form-urlencoded")
+    Call<FutureCommonResponse> changePositionType(@Query("symbol") String symbol, @Query("positionSide") String positionSide, @Query("positionType") String positionType);
+    
 }

@@ -26,11 +26,11 @@ public class XtSpotApiClientImpl implements XtSpotApiClient{
 
     private final XtSpotApiService service;
 
-    public XtSpotApiClientImpl(HttpProxyProperties proxyProperties){
+    public XtSpotApiClientImpl(HttpProxyProperties proxyProperties, String appKey, String secretKey){
         Retrofit retrofit =
                 new Retrofit.Builder()
                         .baseUrl(API_URL)
-                        .client(XtOkHttpClientBuilder.build(proxyProperties,new XtSpotOkHttpInterceptor()))
+                        .client(XtOkHttpClientBuilder.build(proxyProperties,new XtSpotOkHttpInterceptor(appKey, secretKey)))
                         .addConverterFactory(JacksonConverterFactory.create())
                         .build();
         service = retrofit.create(XtSpotApiService.class);
@@ -44,6 +44,11 @@ public class XtSpotApiClientImpl implements XtSpotApiClient{
     @Override
     public CommonResponse getOrder(Long id) {
         return executeSync(service.getOrder(id));
+    }
+
+    @Override
+    public CommonResponse symbol(String symbol) {
+        return executeSync(service.symbol(symbol));
     }
 
     @Override

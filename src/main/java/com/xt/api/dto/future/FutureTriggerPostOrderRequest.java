@@ -3,25 +3,18 @@ package com.xt.api.dto.future;
 import lombok.Builder;
 import lombok.Data;
 
-/**
- * @author zhouzhuang
- * @create 2023/9/20 16:09
- */
 @Data
 @Builder
-public class FuturePostOrderRequest {
+public class FutureTriggerPostOrderRequest {
 
 	private String clientOrderId;
-	
     private String symbol;
     private String orderSide;
-    private String orderType;
+    private String entrustType;
     private String origQty;
     private String price;
-    private String reduceOnly;
-
+    private String stopPrice;
     private String timeInForce;
-    private String triggerProfitPrice;
-    private String triggerStopPrice;
+    private String triggerPriceType;
     private String positionSide;
 }

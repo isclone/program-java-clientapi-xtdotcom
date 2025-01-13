@@ -24,6 +24,9 @@ public interface XtSpotApiService {
     @GET("/v4/order")
     Call<CommonResponse> queryOrder(@Query("orderId") Long orderId);
 
+    @GET("/v4/public/symbol")
+    Call<CommonResponse> symbol(@Query("symbols") String symbol);
+
     @DELETE("/v4/order/{id}")
     Call<CommonResponse> delOrder(@Path("id")Long id);
 

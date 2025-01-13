@@ -9,12 +9,17 @@ import org.apache.commons.codec.digest.HmacUtils;
  * @create 2023/9/21 10:43
  */
 public class XtSpotOkHttpInterceptor extends XtAbstractOkHttpInterceptor {
+	
+	public XtSpotOkHttpInterceptor(String appKey, String secretKey) {
+    	super(appKey, secretKey);
+    }
+	
     //original=XY,
     //X='validate-algorithms=HmacSHA256&validate-appkey=3976eb88-76d0-4f6e-a6b2-a57980770085&validate-recvwindow=5000&validate-timestamp=1641446237201'
     //Y=#method#path#query#body
     @Override
     protected String generateSign(String timestamp, String window, String method, String uri, String query, String jsonBody) {
-        String x = String.format(HEADER_ALG+"=%s&"+HEADER_APPKEY+"=%s&"+HEADER_WIND+"=%s&"+HEADER_TIME+"=%s", encry, appKey, window, timestamp);
+        String x = String.format(HEADER_ALG+"=%s&"+HEADER_APPKEY+"=%s&"+HEADER_WIND+"=%s&"+HEADER_TIME+"=%s", encry, getAppKey(), window, timestamp);
         String y = String.format("#%s#%s", method, uri);
         if (query != null && query.length() > 0) {
             y += "#" + query;
@@ -23,7 +28,6 @@ public class XtSpotOkHttpInterceptor extends XtAbstractOkHttpInterceptor {
             y += "#" + jsonBody;
         }
         String origin = x + y;
-        System.out.println("origion===" + origin);
-        return HmacUtils.hmacSha256Hex(secretKey, origin);
+        return HmacUtils.hmacSha256Hex(getSecretKey(), origin);
     }
 }

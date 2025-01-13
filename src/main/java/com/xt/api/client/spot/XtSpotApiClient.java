@@ -23,6 +23,8 @@ public interface XtSpotApiClient {
     CommonResponse getOrder(Long id);
 
     CommonResponse queryOrder(Long orderId);
+    
+    CommonResponse symbol(String symbol);
 
     CommonResponse delOrder(Long id);
 

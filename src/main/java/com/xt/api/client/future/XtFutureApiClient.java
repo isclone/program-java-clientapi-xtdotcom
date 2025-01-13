@@ -1,11 +1,16 @@
 package com.xt.api.client.future;
 
-import com.xt.api.dto.FutureCommonResponse;
-import com.xt.api.dto.future.FuturePostOrderRequest;
-
-
 import java.util.List;
 import java.util.Map;
+
+import com.xt.api.dto.FutureCommonResponse;
+import com.xt.api.dto.future.ContractResponse;
+import com.xt.api.dto.future.FuturePostOrderRequest;
+import com.xt.api.dto.future.FutureTriggerPostOrderRequest;
+
+import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.Query;
 
 
 /**
@@ -16,9 +21,8 @@ public interface XtFutureApiClient {
 
 
     FutureCommonResponse postOrder(FuturePostOrderRequest request);
-
+    
     FutureCommonResponse batchOrder(List<FuturePostOrderRequest> futurePostOrderRequestList);
-
 
     FutureCommonResponse orderListHistory(Map<String, String> params);
 
@@ -32,20 +36,32 @@ public interface XtFutureApiClient {
 
     FutureCommonResponse allCancel(String symbol);
 
-    FutureCommonResponse entrustCreatePlan(Map<String, String> params);
+    FutureCommonResponse postTriggerOrder(@Body FutureTriggerPostOrderRequest futurePostOrderRequest);
 
-    FutureCommonResponse entrustCancelPlan(Long entrustId);
+    FutureCommonResponse cancelTriggerOrder(Long entrustId);
 
-    FutureCommonResponse entrustCancelAllPlan(String symbol);
-
-
+    FutureCommonResponse cancelAllTriggerOrders(String symbol);
 
     FutureCommonResponse accountInfo();
+    
+    FutureCommonResponse positionList(String symbol);
 
+    FutureCommonResponse balanceList();
+    
     FutureCommonResponse balanceDetail(String coin);
 
     FutureCommonResponse listenKey();
 
     FutureCommonResponse adjustLeverage(String symbol,String positionSide,Integer leverage);
+
+    FutureCommonResponse changePositionType(String symbol, String positionSide, String positionType);
+    
+    FutureCommonResponse symbols();
+    
+    FutureCommonResponse symbolMarkPrice(String symbol);
+    
+    FutureCommonResponse kline(String symbol, String interval, Long startTime, Long endTime, Long limit);
+    
+    List<ContractResponse> contracts();
 
 }

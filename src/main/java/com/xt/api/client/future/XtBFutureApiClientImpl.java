@@ -18,11 +18,11 @@ public class XtBFutureApiClientImpl extends AbstractXtFutureApiClient{
 
     private final XtFutureApiService service;
 
-    public XtBFutureApiClientImpl(HttpProxyProperties proxyProperties){
+    public XtBFutureApiClientImpl(HttpProxyProperties proxyProperties, String appKey, String secretKey){
         Retrofit retrofit =
                 new Retrofit.Builder()
                         .baseUrl(API_URL)
-                        .client(XtOkHttpClientBuilder.build(proxyProperties,new XtFutureOkHttpInterceptor()))
+                        .client(XtOkHttpClientBuilder.build(proxyProperties,new XtFutureOkHttpInterceptor(appKey, secretKey)))
                         .addConverterFactory(JacksonConverterFactory.create())
                         .build();
         service = retrofit.create(XtFutureApiService.class);
