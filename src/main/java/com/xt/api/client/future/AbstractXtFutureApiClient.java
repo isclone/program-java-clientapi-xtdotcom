@@ -3,7 +3,10 @@ package com.xt.api.client.future;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import com.google.gson.Gson;
+import com.xt.api.client.copytrade.spot.XtSpotCopyTradeApiClientImpl;
 import com.xt.api.dto.FutureCommonListResponse;
 import com.xt.api.dto.FutureCommonResponse;
 import com.xt.api.dto.future.ContractResponse;
@@ -22,6 +25,8 @@ import retrofit2.http.Query;
  * @create 2023/9/20 18:23
  */
 public abstract class AbstractXtFutureApiClient implements XtFutureApiClient{
+	
+	private static final Logger LOG = Logger.getLogger(AbstractXtFutureApiClient.class);
 	
     private final Gson gson = new Gson();
     @Override
@@ -136,7 +141,7 @@ public abstract class AbstractXtFutureApiClient implements XtFutureApiClient{
 	            throw new RuntimeException(String.format("failed to call interface:%s,%s",response.code(),response.toString()));
 	        }
 	    }catch (Exception e){
-	        System.err.println("call interface exception:"+e);
+	        LOG.error("call interface exception:"+e);
 	        throw new RuntimeException(e);
 	    }
     }
@@ -154,12 +159,12 @@ public abstract class AbstractXtFutureApiClient implements XtFutureApiClient{
             if (response.isSuccessful()) {
                 return response.body();
             }else {
-                System.err.println(String.format("failed to call interface:%s,%s",response.code(),response.toString()));
+                LOG.error(String.format("failed to call interface:%s,%s",response.code(),response.toString()));
                 String err = new String(response.errorBody().bytes());
                 return gson.fromJson(err,FutureCommonResponse.class);
             }
         }catch (Exception e){
-            System.err.println("call interface exception:"+e);
+            LOG.error("call interface exception:"+e);
             throw new RuntimeException(e);
         }
     }

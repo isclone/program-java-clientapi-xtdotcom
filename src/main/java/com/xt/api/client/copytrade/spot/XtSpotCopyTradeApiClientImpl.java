@@ -2,6 +2,7 @@ package com.xt.api.client.copytrade.spot;
 
 import com.xt.api.client.HttpProxyProperties;
 import com.xt.api.client.XtOkHttpClientBuilder;
+import com.xt.api.client.copytrade.futures.XtFuturesCopyTradeApiClientImpl;
 import com.xt.api.dto.CommonResponse;
 import com.xt.api.dto.copytrade.spot.CopyTradeProfitUpdateReqDTO;
 import com.xt.api.dto.copytrade.spot.FollowLeaderDTO;
@@ -15,6 +16,8 @@ import retrofit2.http.QueryMap;
 
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 
 /**
  * @author zhouzhuang
@@ -22,6 +25,8 @@ import java.util.Map;
  */
 public class XtSpotCopyTradeApiClientImpl implements XtSpotCopyTradeApiClient {
 
+	private static final Logger LOG = Logger.getLogger(XtSpotCopyTradeApiClientImpl.class);
+	
     private final static String API_URL = "https://sapi.xt.com";
 
     private final XtSpotCopyTradeApiService service;
@@ -197,11 +202,11 @@ public class XtSpotCopyTradeApiClientImpl implements XtSpotCopyTradeApiClient {
             if (response.isSuccessful()) {
                 return response.body();
             }else {
-                System.err.println(String.format("failed to call interface:%s,%s",response.code(),response.toString()));
+                LOG.error(String.format("failed to call interface:%s,%s",response.code(),response.toString()));
                 return CommonResponse.failure(response.toString());
             }
         }catch (Exception e){
-            System.err.println("call interface exception:"+e);
+            LOG.error("call interface exception:"+e);
             throw new RuntimeException(e);
         }
     }

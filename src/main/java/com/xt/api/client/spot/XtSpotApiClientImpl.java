@@ -1,7 +1,10 @@
 package com.xt.api.client.spot;
 
+import org.apache.log4j.Logger;
+
 import com.xt.api.client.HttpProxyProperties;
 import com.xt.api.client.XtOkHttpClientBuilder;
+import com.xt.api.client.future.AbstractXtFutureApiClient;
 import com.xt.api.dto.CommonResponse;
 
 import com.xt.api.dto.nft.NftDepositRequest;
@@ -22,6 +25,8 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
  */
 public class XtSpotApiClientImpl implements XtSpotApiClient{
 
+	private static final Logger LOG = Logger.getLogger(XtSpotApiClientImpl.class);
+	
     private final static String API_URL = "https://sapi.xt.com";
 
     private final XtSpotApiService service;
@@ -92,11 +97,11 @@ public class XtSpotApiClientImpl implements XtSpotApiClient{
             if (response.isSuccessful()) {
                 return response.body();
             }else {
-                System.err.println(String.format("failed to call interface:%s,%s",response.code(),response.toString()));
+                LOG.error(String.format("failed to call interface:%s,%s",response.code(),response.toString()));
                 return CommonResponse.failure(response.toString());
             }
         }catch (Exception e){
-            System.err.println("call interface exception:"+e);
+            LOG.error("call interface exception:"+e);
             throw new RuntimeException(e);
         }
     }

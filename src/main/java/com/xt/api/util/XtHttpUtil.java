@@ -5,6 +5,8 @@ import cn.hutool.http.GlobalHeaders;
 import cn.hutool.http.HttpRequest;
 import org.apache.commons.codec.digest.HmacUtils;
 
+import org.apache.log4j.Logger;
+
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -13,6 +15,8 @@ import java.util.TreeMap;
  * @create 2022/10/28 10:48
  */
 public class XtHttpUtil {
+	private static final Logger LOG = Logger.getLogger(XtHttpUtil.class);
+	
     private static final String appKey = "6f7fb3c0-1b1c-4b0c-b53c-3e461cb3018e";
     private static final String secretKey = "b1e286bfac92eecc20e0429313002eb04604835c";
     private static final String encry = "HmacSHA256";
@@ -39,7 +43,7 @@ public class XtHttpUtil {
         HttpRequest httpRequest = HttpRequest.delete(url);
         config(httpRequest, time + "", signature);
         httpRequest.body(jsonBody);
-        System.out.println("request===="+httpRequest.getMethod()+" "+httpRequest);
+        LOG.debug("request===="+httpRequest.getMethod()+" "+httpRequest);
         return httpRequest.execute().body();
     }
 
@@ -50,7 +54,7 @@ public class XtHttpUtil {
         HttpRequest httpRequest = HttpRequest.post(url);
         config(httpRequest, time + "", signature);
         httpRequest.body(jsonBody);
-        System.out.println("request===="+httpRequest.getMethod()+" "+httpRequest);
+        LOG.debug("request===="+httpRequest.getMethod()+" "+httpRequest);
         return httpRequest.execute().body();
     }
 
@@ -76,7 +80,7 @@ public class XtHttpUtil {
             httpRequest = HttpRequest.delete(url);
         }
         config(httpRequest, time + "", signature);
-        System.out.println("request===="+httpRequest.getMethod()+" "+httpRequest);
+        LOG.debug("request===="+httpRequest.getMethod()+" "+httpRequest);
         return httpRequest.execute().body();
     }
 

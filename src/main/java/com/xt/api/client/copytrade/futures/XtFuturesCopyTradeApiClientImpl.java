@@ -2,6 +2,7 @@ package com.xt.api.client.copytrade.futures;
 
 import com.xt.api.client.HttpProxyProperties;
 import com.xt.api.client.XtOkHttpClientBuilder;
+import com.xt.api.client.XtWebSocketClient;
 import com.xt.api.dto.FutureCommonResponse;
 import com.xt.api.dto.copytrade.futures.AdjustLeverageReqDTO;
 import com.xt.api.interceptor.XtFutureOkHttpInterceptor;
@@ -12,11 +13,15 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author fonda
  */
 public class XtFuturesCopyTradeApiClientImpl implements XtFuturesCopyTradeApiClient {
 
+	private static final Logger LOG = Logger.getLogger(XtFuturesCopyTradeApiClientImpl.class);
+	
     private final static String API_URL = "https://sapi.xt.com";
 
     private final XtFuturesCopyTradeApiService service;
@@ -202,11 +207,11 @@ public class XtFuturesCopyTradeApiClientImpl implements XtFuturesCopyTradeApiCli
             if (response.isSuccessful()) {
                 return response.body();
             }else {
-                System.err.println(String.format("failed to call interface:%s, %s", response.code(), response.toString()));
+                LOG.error(String.format("failed to call interface:%s, %s", response.code(), response.toString()));
                 return FutureCommonResponse.failure(response.toString());
             }
         }catch (Exception e){
-            System.err.println("call interface exception:" + e);
+            LOG.error("call interface exception:" + e);
             throw new RuntimeException(e);
         }
     }

@@ -1,13 +1,14 @@
 package com.xt.api.client;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Collections;
+
+import org.apache.log4j.Logger;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_6455;
 import org.java_websocket.extensions.permessage_deflate.PerMessageDeflateExtension;
 import org.java_websocket.handshake.ServerHandshake;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Collections;
 
 /**
  * @author zhouzhuang
@@ -15,24 +16,26 @@ import java.util.Collections;
  */
 public class XtWebSocketClient extends WebSocketClient {
 
+	private static final Logger LOG = Logger.getLogger(XtWebSocketClient.class);
+	
     public XtWebSocketClient(String uri) throws URISyntaxException {
         super(new URI(uri),new Draft_6455(Collections.singletonList(new PerMessageDeflateExtension())));
     }
 
     @Override
     public void onOpen(ServerHandshake handshakedata) {
-        System.out.println("websocket connect server success");
+        LOG.debug("websocket connect server success");
     }
     @Override
     public void onMessage(String message) {
-        System.out.println("websocket recive msg ="+ message);
+        LOG.debug("websocket recive msg ="+ message);
     }
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        System.out.println("websocket client quit");
+        LOG.debug("websocket client quit");
     }
     @Override
     public void onError(Exception ex) {
-        System.out.println("websocket connect error ="+ex.getMessage());
+        LOG.debug("websocket connect error ="+ex.getMessage());
     }
 }
